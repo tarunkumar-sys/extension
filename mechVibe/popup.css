@@ -1,0 +1,264 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  width: 320px;
+  min-height: 400px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #252525;
+  border-bottom: 1px solid #333;
+}
+
+.header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #555;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.main {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-option {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.profile-option:hover {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+.profile-option input[type="radio"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.profile-option input[type="radio"]:checked + span {
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.profile-option span {
+  flex: 1;
+  font-size: 14px;
+  color: #e0e0e0;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.volume-control input[type="range"] {
+  flex: 1;
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #4CAF50;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.volume-control input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #4CAF50;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+#volumeValue {
+  font-size: 12px;
+  color: #999;
+  min-width: 40px;
+  text-align: right;
+}
+
+.blacklist-control {
+  display: flex;
+  gap: 8px;
+}
+
+.blacklist-control input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 13px;
+  outline: none;
+}
+
+.blacklist-control input:focus {
+  border-color: #4CAF50;
+}
+
+.blacklist-control input::placeholder {
+  color: #666;
+}
+
+.blacklist-control button {
+  padding: 8px 16px;
+  background: #4CAF50;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.blacklist-control button:hover {
+  background: #45a049;
+}
+
+.blacklist-list {
+  list-style: none;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.blacklist-list .empty {
+  padding: 12px;
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+}
+
+.blacklist-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.blacklist-item span {
+  color: #e0e0e0;
+  flex: 1;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #ff4444;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.remove-btn:hover {
+  color: #ff6666;
+}
+
