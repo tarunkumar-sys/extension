@@ -1,60 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebVibes</title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <div class="container">
-    <header class="header">
-      <h1>WebVibes</h1>
-      <label class="toggle-switch">
-        <input type="checkbox" id="enableToggle" checked>
-        <span class="slider"></span>
-      </label>
-    </header>
-    
-    <main class="main">
-      <section class="section">
-        <h2>Sound Profile</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebVibes</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>WebVibes</h1>
+        <label class="toggle-switch">
+          <input type="checkbox" id="enableToggle" checked />
+          <span class="slider"></span>
+        </label>
+      </header>
+
+      <main class="main">
+        <!-- Sound Profile -->
+        <section class="section">
+          <div class="section-header">
+            <h2>Sound Profile</h2>
+            <button id="settingsBtn" class="settings-btn">Settings</button>
+          </div>
+
+          <div class="profile-selector">
+            <label class="profile-option">
+              <input type="radio" name="profile" value="linear" checked />
+              <span>Linear</span>
+            </label>
+            <label class="profile-option">
+              <input type="radio" name="profile" value="clicky" />
+              <span>Clicky</span>
+            </label>
+            <label class="profile-option">
+              <input type="radio" name="profile" value="typewriter" />
+              <span>Typewriter</span>
+            </label>
+          </div>
+
+          <div class="profile-footer">
+            <button id="moreSoundsBtn" class="more-btn">More</button>
+          </div>
+        </section>
+
+        <!-- Volume -->
+        <section class="section">
+          <h2>Volume</h2>
+          <div class="volume-control">
+            <input
+              type="range"
+              id="volumeSlider"
+              min="0"
+              max="100"
+              value="70"
+            />
+            <span id="volumeValue">70%</span>
+          </div>
+        </section>
+
+        <!-- Blacklist -->
+        <section class="section">
+          <h2>Site Blacklist</h2>
+          <div class="blacklist-control">
+            <input type="text" id="siteInput" placeholder="example.com" />
+            <button id="addSiteBtn">Add</button>
+          </div>
+          <ul id="blacklistList" class="blacklist-list"></ul>
+        </section>
+      </main>
+    </div>
+
+    <!-- Key Settings Panel -->
+    <div id="keySettingsPanel" class="slide-over-panel">
+      <div class="panel-header">
+        <button id="backBtn" class="back-btn">
+          <i class="ri-arrow-left-s-line"></i> Back
+        </button>
+      </div>
+      <div class="panel-body">
+        <p class="panel-description">Toggle which keys trigger sound effects</p>
+        <div id="keySettingsContainer" class="key-settings-container"></div>
+      </div>
+    </div>
+
+    <!-- More Sounds Panel -->
+    <div id="moreSoundsPanel" class="slide-over-panel">
+      <div class="panel-header">
+        <button id="backMoreSoundsBtn" class="back-btn">
+          <i class="ri-arrow-left-s-line"></i> Back
+        </button>
+      </div>
+      <div class="panel-body">
         <div class="profile-selector">
           <label class="profile-option">
-            <input type="radio" name="profile" value="linear" checked>
-            <span>Linear</span>
+            <input type="radio" name="profile" value="gunshot" />
+            <span>Gunshot</span>
           </label>
           <label class="profile-option">
-            <input type="radio" name="profile" value="clicky">
-            <span>Clicky</span>
-          </label>
-          <label class="profile-option">
-            <input type="radio" name="profile" value="typewriter">
-            <span>Typewriter</span>
+            <input type="radio" name="profile" value="creams" />
+            <span>Creams</span>
           </label>
         </div>
-      </section>
-      
-      <section class="section">
-        <h2>Volume</h2>
-        <div class="volume-control">
-          <input type="range" id="volumeSlider" min="0" max="100" value="70">
-          <span id="volumeValue">70%</span>
-        </div>
-      </section>
-      
-      <section class="section">
-        <h2>Site Blacklist</h2>
-        <div class="blacklist-control">
-          <input type="text" id="siteInput" placeholder="example.com">
-          <button id="addSiteBtn">Add</button>
-        </div>
-        <ul id="blacklistList" class="blacklist-list"></ul>
-      </section>
-    </main>
-  </div>
-  
-  <script src="popup.js"></script>
-</body>
-</html>
+      </div>
+    </div>
 
+    <script src="popup.js"></script>
+  </body>
+</html>
