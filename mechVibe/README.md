@@ -4,74 +4,64 @@ A browser extension that adds satisfying mechanical keyboard sounds to your typi
 
 ## Features
 
-- 🎹 Multiple sound profiles (Linear, Clicky, Typewriter, Gunshot, Creams)
+- 🎹 Multiple sound profiles (Linear, Clicky, Typewriter, Gunshot, Creams, Anime Moan, Razer Typewriter)
 - 🔊 Volume control
-- ⌨️ Per-key sound customization
+- ⌨️ Per-key sound customization (A-Z, 0-9, Space, Enter, Backspace)
 - 🚫 Site blacklist
 - 🔇 Enable/disable toggle
 
 ## Installation
 
-1. Open Chrome/Edge and navigate to `chrome://extensions/` (or `edge://extensions/`)
-2. Enable "Developer mode" (toggle in top right)
+1. Open Chrome/Edge and go to `chrome://extensions/` (or `edge://extensions/`)
+2. Enable "Developer mode"
 3. Click "Load unpacked"
-4. Select the extension folder (`mechVibe`)
+4. Select the `mechVibe` folder
 
 ## Adding Custom Audio Files
 
 ### Step 1: Create a Profile Folder
 
-Create a new folder inside the `audio/` directory with your profile name (e.g., `myprofile/`):
-
-```
-audio/
-  ├── linear/
-  ├── clicky/
-  ├── typewriter/
-  ├── gunshot/
-  ├── creams/
-  └── myprofile/  ← Your new profile folder
-```
+Create a new folder in `audio/` with your profile name (e.g., `myprofile/`).
 
 ### Step 2: Add Audio Files
 
-Place your audio files in the profile folder. The extension looks for these specific file names:
+Place audio files in the profile folder. Supported formats: MP3, WAV, OGG.
 
-#### Required Files (in order of priority):
+#### General Files:
 
-1. **Profile Sound File** (used as fallback):
-   - `myprofile.mp3` OR `myprofile.wav` OR `myprofile.ogg`
-   - This file will be used for all keys if specific key files are not found
+- `myprofile.mp3/wav/ogg` - Profile fallback sound
+- `key.mp3/wav/ogg` - Default sound for unspecified keys
 
-2. **Specific Key Files** (optional, but recommended):
-   - `key.mp3` / `key.wav` / `key.ogg` - Default keypress sound
-   - `spacebar.mp3` / `spacebar.wav` / `spacebar.ogg` - Spacebar sound
-   - `enter.mp3` / `enter.wav` / `enter.ogg` - Enter key sound
-   - `backspace.mp3` / `backspace.wav` / `backspace.ogg` - Backspace sound
+#### Special Key Files:
 
-#### File Format Priority:
+- `spacebar.mp3/wav/ogg` - Spacebar sound
+- `enter.mp3/wav/ogg` - Enter key sound
+- `backspace.mp3/wav/ogg` - Backspace sound
 
-The extension tries files in this order:
-1. `.mp3`
-2. `.wav`
-3. `.ogg`
+#### Per-Key Files (New):
 
-**Example structure:**
+- `keyA.mp3/wav/ogg` to `keyZ.mp3/wav/ogg` - Individual letter sounds
+- `key0.mp3/wav/ogg` to `key9.mp3/wav/ogg` - Individual number sounds
+
+**Example:**
+
 ```
-audio/
-  └── myprofile/
-      ├── myprofile.ogg          ← Profile fallback sound
-      ├── key.ogg                 ← Default key sound
-      ├── spacebar.ogg            ← Spacebar sound
-      ├── enter.ogg               ← Enter key sound
-      └── backspace.ogg           ← Backspace sound
+audio/myprofile/
+├── myprofile.ogg          # Profile fallback
+├── key.ogg                 # Default key sound
+├── spacebar.ogg            # Spacebar
+├── enter.ogg               # Enter
+├── backspace.ogg           # Backspace
+├── keyA.ogg                # A key
+├── keyB.ogg                # B key
+├── key1.ogg                # 1 key
+└── ...
 ```
 
-### Step 3: Add Profile to HTML
+### Step 3: Add Profile to UI
 
-Open `popup.html` and add your profile to the Sound Profile section:
+Add to `popup.html` in the profile selector:
 
-**In the main profile selector** (around line 25-40):
 ```html
 <label class="profile-option">
   <input type="radio" name="profile" value="myprofile" />
@@ -79,124 +69,54 @@ Open `popup.html` and add your profile to the Sound Profile section:
 </label>
 ```
 
-**Or add it to the "More" panel** (around line 80-90):
-```html
-<label class="profile-option">
-  <input type="radio" name="profile" value="myprofile" />
-  <span>My Profile</span>
-</label>
-```
+### Step 4: Reload Extension
 
-### Step 4: Update manifest.json (if needed)
-
-The `manifest.json` already includes a wildcard pattern for audio files:
-```json
-"web_accessible_resources": [
-  {
-    "resources": ["audio/*/*.mp3", "audio/*/*.wav", "audio/*/*.ogg"],
-    "matches": ["<all_urls>"]
-  }
-]
-```
-
-This means any audio files you add will automatically be accessible. **No changes needed** unless you're using a different file format.
-
-### Step 5: Reload the Extension
-
-1. Go to `chrome://extensions/`
-2. Find "WebVibes" extension
-3. Click the reload icon (🔄)
-4. Open the extension popup
-5. Your new profile should appear in the Sound Profile list
+Go to `chrome://extensions/`, find WebVibes, and click reload.
 
 ## Audio File Requirements
 
-### Supported Formats
-- **MP3** (`.mp3`) - Recommended for smaller file sizes
-- **WAV** (`.wav`) - Higher quality, larger files
-- **OGG** (`.ogg`) - Good balance of quality and size
+- **Formats**: MP3, WAV, OGG
+- **Duration**: 0.05-0.2 seconds
+- **Size**: Under 100KB each
+- **Naming**: Exact case, no spaces (e.g., `keyA.wav`)
 
-### File Naming Rules
-- Use lowercase names: `key.ogg` ✅, `Key.ogg` ❌
-- No spaces in filenames: `my-profile.ogg` ✅, `my profile.ogg` ❌
-- Profile folder name must match the `value` in the HTML radio button
+## Fallback Order
 
-### Best Practices
-
-1. **File Size**: Keep files under 100KB each for faster loading
-2. **Duration**: 0.05-0.2 seconds works best for key sounds
-3. **Sample Rate**: 44.1kHz or 48kHz recommended
-4. **Bitrate**: 128kbps for MP3, 16-bit for WAV/OGG
+1. Specific key file (e.g., `keyA.wav`)
+2. General `key.wav`
+3. Profile sound (e.g., `myprofile.wav`)
+4. Generated tone
 
 ## Troubleshooting
 
-### Sound Not Playing
+- **No sound**: Check file names, formats, and reload extension
+- **Wrong sound**: Verify fallback hierarchy
+- **Profile not showing**: Check HTML and folder name
+- **Console errors**: Open DevTools (F12) and check
 
-1. **Check file names**: Must be exactly `key`, `spacebar`, `enter`, or `backspace`
-2. **Check file format**: Only `.mp3`, `.wav`, or `.ogg` are supported
-3. **Check folder name**: Must match the `value` in HTML (case-sensitive)
-4. **Reload extension**: After adding files, always reload the extension
-5. **Check browser console**: Open DevTools (F12) and look for errors
-
-### Profile Not Appearing
-
-1. **Check HTML**: Make sure you added the profile option to `popup.html`
-2. **Check folder**: Profile folder must be inside `audio/` directory
-3. **Reload extension**: Changes to HTML require extension reload
-
-### Fallback Sounds
-
-If specific key files are missing, the extension will:
-1. Try to use the profile sound file (e.g., `myprofile.ogg`)
-2. If that's missing, generate a simple fallback tone programmatically
-
-## Example: Adding a "Blue Switch" Profile
-
-1. **Create folder**: `audio/blueswitch/`
-
-2. **Add files**:
-   ```
-   audio/blueswitch/
-     ├── blueswitch.ogg
-     ├── key.ogg
-     ├── spacebar.ogg
-     ├── enter.ogg
-     └── backspace.ogg
-   ```
-
-3. **Update popup.html**:
-   ```html
-   <label class="profile-option">
-     <input type="radio" name="profile" value="blueswitch" />
-     <span>Blue Switch</span>
-   </label>
-   ```
-
-4. **Reload extension** and test!
-
-## File Structure Reference
+## File Structure
 
 ```
 mechVibe/
 ├── audio/
 │   ├── linear/
-│   │   └── linear.wav
 │   ├── clicky/
-│   │   └── clicky.wav
 │   ├── typewriter/
-│   │   └── cherrymx-black-abs.ogg
 │   ├── gunshot/
-│   │   └── gunshot.ogg
 │   ├── creams/
-│   │   └── Creams.ogg
+│   ├── animemoan/
+│   ├── razertypewriter/
 │   └── [your-profile]/
-│       ├── [profile-name].ogg
-│       ├── key.ogg
-│       ├── spacebar.ogg
-│       ├── enter.ogg
-│       └── backspace.ogg
+│       ├── [profile-name].mp3/wav/ogg
+│       ├── key.mp3/wav/ogg
+│       ├── spacebar.mp3/wav/ogg
+│       ├── enter.mp3/wav/ogg
+│       ├── backspace.mp3/wav/ogg
+│       ├── keyA.mp3/wav/ogg
+│       ├── keyB.mp3/wav/ogg
+│       ├── key1.mp3/wav/ogg
+│       └── ...
 ├── icons/
-│   └── icon.png
 ├── background.js
 ├── content.js
 ├── manifest.json
@@ -206,24 +126,13 @@ mechVibe/
 └── README.md
 ```
 
-## Advanced: Custom Key Sounds
-
-Currently, the extension supports 4 key types:
-- `key` - Regular keys (A-Z, 0-9, etc.)
-- `spacebar` - Space key
-- `enter` - Enter key
-- `backspace` - Backspace key
-
-To add support for more specific keys, you would need to modify `content.js` in the `playKeySound()` function.
-
 ## Support
 
-For issues or questions:
-1. Check the browser console for errors
-2. Verify file names and locations
-3. Ensure extension is reloaded after changes
-4. Check that audio files are valid (play them in a media player)
+- Check browser console for errors
+- Verify file names and locations
+- Reload extension after changes
+- Test audio files in a media player
 
 ---
 
-**Note**: After making any changes to files or HTML, always reload the extension for changes to take effect!
+**Note**: Reload extension after any file changes.

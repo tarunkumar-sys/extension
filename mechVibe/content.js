@@ -105,7 +105,7 @@ class WebVibesAudio {
    */
   /**
    * Loads a sound file on-demand (lazy loading for better performance)
-   * @param {string} bufferKey - The buffer key ('key', 'spacebar', 'enter', 'backspace')
+   * @param {string} bufferKey - The buffer key ('key', 'spacebar', 'enter', 'backspace', 'keyA', 'key1', etc.)
    * @returns {Promise<AudioBuffer>} The loaded audio buffer
    */
   async loadSound(bufferKey) {
@@ -117,7 +117,7 @@ class WebVibesAudio {
     const profile = this.settings.soundProfile;
     const extensions = ["mp3", "wav", "ogg"];
 
-    // Try to load specific key file first
+    // Try to load specific bufferKey file first
     for (const ext of extensions) {
       try {
         const url = chrome.runtime.getURL(
@@ -137,7 +137,15 @@ class WebVibesAudio {
       }
     }
 
-    // If specific file not found, try profile sound file
+    // If specific file not found and bufferKey is not "key", try "key" as fallback
+    if (bufferKey !== "key") {
+      const fallbackBuffer = await this.loadSound("key");
+      if (fallbackBuffer) {
+        return fallbackBuffer;
+      }
+    }
+
+    // If "key" not found, try profile sound file
     for (const ext of extensions) {
       try {
         const url = chrome.runtime.getURL(`audio/${profile}/${profile}.${ext}`);
@@ -147,11 +155,8 @@ class WebVibesAudio {
           const audioBuffer = await this.audioContext.decodeAudioData(
             arrayBuffer
           );
-          // Cache profile sound for all keys (since it's the profile sound)
+          // Cache profile sound as 'key' for future fallbacks
           this.buffers["key"] = audioBuffer;
-          this.buffers["spacebar"] = audioBuffer;
-          this.buffers["enter"] = audioBuffer;
-          this.buffers["backspace"] = audioBuffer;
           return audioBuffer;
         }
       } catch (error) {
@@ -166,7 +171,7 @@ class WebVibesAudio {
   }
 
   /**
-   * Preloads only the main profile sound for faster initial load
+   * Preloads the main profile sound for faster initial load
    */
   async preloadSounds() {
     // Clear all buffers when profile changes
@@ -175,7 +180,7 @@ class WebVibesAudio {
     const profile = this.settings.soundProfile;
     const extensions = ["mp3", "wav", "ogg"];
 
-    // Load only the profile sound file (used as fallback for all keys)
+    // Load the profile sound file (used as fallback for all keys)
     for (const ext of extensions) {
       try {
         const url = chrome.runtime.getURL(`audio/${profile}/${profile}.${ext}`);
@@ -185,11 +190,8 @@ class WebVibesAudio {
           const audioBuffer = await this.audioContext.decodeAudioData(
             arrayBuffer
           );
-          // Store as 'key' buffer (will be used for all keys if specific files don't exist)
+          // Store as 'key' buffer (will be used as fallback if specific files don't exist)
           this.buffers["key"] = audioBuffer;
-          this.buffers["spacebar"] = audioBuffer;
-          this.buffers["enter"] = audioBuffer;
-          this.buffers["backspace"] = audioBuffer;
           return;
         }
       } catch (error) {
@@ -281,15 +283,22 @@ class WebVibesAudio {
       }
     }
 
-    // Determine which sound buffer to use based on the key
+    // Determine which sound buffer to use based on the key code
     let bufferKey = "key";
-    if (key === " " || code === "Space") {
+    if (code === "Space") {
       bufferKey = "spacebar";
-    } else if (key === "Enter" || code === "Enter") {
+    } else if (code === "Enter") {
       bufferKey = "enter";
-    } else if (key === "Backspace" || code === "Backspace") {
+    } else if (code === "Backspace") {
       bufferKey = "backspace";
+    } else if (code.startsWith("Key")) {
+      // For letter keys: KeyA -> keyA, KeyB -> keyB, etc.
+      bufferKey = "key" + code.slice(3);
+    } else if (code.startsWith("Digit")) {
+      // For number keys: Digit1 -> key1, Digit2 -> key2, etc.
+      bufferKey = "key" + code.slice(5);
     }
+    // For other keys (like ShiftLeft, etc.), bufferKey remains "key"
 
     // Load sound on-demand (lazy loading)
     const buffer = await this.loadSound(bufferKey);
